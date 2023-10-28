@@ -119,7 +119,7 @@ if (isset($_SESSION['email']) && isset($_SESSION['name']) && isset($_SESSION['id
                         while ($row = mysqli_fetch_array($q)) {
                             $qns = $row['qns'];
                             $qid = $row['qid'];
-                            echo '<b>Question &nbsp;' . $sn . '&nbsp;::<br /><br />' . $qns . '</b><br /><br />';
+                            echo '<b>Question &nbsp;' . $sn . '&nbsp;::<br /><br />' . $qns . '</b><b style="color:red;"> * </b><br /><br />';
                         }
                         $q = mysqli_query($con, "SELECT * FROM options WHERE qid='$qid' ");
                         echo '<form action="update.php?q=quiz&step=2&eid=' . $eid . '&n=' . $sn . '&t=' . $total . '&qid=' . $qid . '" method="POST" class="form-horizontal" onsubmit="return validateForm();"><br />';
