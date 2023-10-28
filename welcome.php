@@ -109,28 +109,31 @@ if (isset($_SESSION['email']) && isset($_SESSION['name']) && isset($_SESSION['id
                 }?>
 
                 <?php
-                    if (@$_GET['q'] == 'quiz' && @$_GET['step'] == 2) {
-                        $eid = @$_GET['eid'];
-                        $sn = @$_GET['n'];
-                        $total = @$_GET['t'];
-                        $qid = @$_GET['qid'];
-                        $q = mysqli_query($con, "SELECT * FROM questions WHERE eid='$eid' AND sn='$sn' ");
-                        echo '<div class="panel" style="margin:5%">';
-                        while ($row = mysqli_fetch_array($q)) {
-                            $qns = $row['qns'];
-                            $qid = $row['qid'];
-                            echo '<b>Question &nbsp;' . $sn . '&nbsp;::<br /><br />' . $qns . '</b><b style="color:red;"> * </b><br /><br />';
-                        }
-                        $q = mysqli_query($con, "SELECT * FROM options WHERE qid='$qid' ");
-                        echo '<form action="update.php?q=quiz&step=2&eid=' . $eid . '&n=' . $sn . '&t=' . $total . '&qid=' . $qid . '" method="POST" class="form-horizontal" onsubmit="return validateForm();"><br />';
-                    
-                        while ($row = mysqli_fetch_array($q)) {
-                            $option = $row['option'];
-                            $optionid = $row['optionid'];
-                            echo '<input type="radio" name="ans" value="' . $optionid . '">&nbsp;' . $option . '<br /><br />';
-                        }
-                        echo '<div id="error_message" style="color: red;"></div><br /><button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span>&nbsp;Submit</button></form></div>';
+                if (@$_GET['q'] == 'quiz' && @$_GET['step'] == 2) {
+                    $eid = @$_GET['eid'];
+                    $sn = @$_GET['n'];
+                    $total = @$_GET['t'];
+                    $qid = @$_GET['qid'];
+                    $q = mysqli_query($con, "SELECT * FROM questions WHERE eid='$eid' AND sn='$sn' ");
+                    echo '<div class="panel" style="margin:5%">';
+                    while ($row = mysqli_fetch_array($q)) {
+                        $qns = $row['qns'];
+                        $qid = $row['qid'];
+                        echo '<b>Question &nbsp;' . $sn . '&nbsp;::<br /><br />' . $qns . '</b><b style="color:red;"> * </b><br /><br />';
                     }
+                    $q = mysqli_query($con, "SELECT * FROM options WHERE qid='$qid' ");
+                    echo '<form action="update.php?q=quiz&step=2&eid=' . $eid . '&n=' . $sn . '&t=' . $total . '&qid=' . $qid . '" method="POST" class="form-horizontal" onsubmit="return validateForm();"><br />';
+
+                    while ($row = mysqli_fetch_array($q)) {
+                        $option = $row['option'];
+                        $optionid = $row['optionid'];
+                        echo '<input type="radio" name="ans" value="' . $optionid . '">&nbsp;' . $option . '<br /><br />';
+                    }
+                    
+                    // Add a "Clear Quiz" button
+                    echo '<div id="error_message" style="color: red;"></div><br /><button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span>&nbsp;Submit</button> <button type="button" class="btn btn-danger" onclick="destroyQuiz();"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp;Destroy Quiz</button>
+                    </div></form>';
+                }
                 ?>
                 <script>
                     function validateForm() {
@@ -141,6 +144,13 @@ if (isset($_SESSION['email']) && isset($_SESSION['name']) && isset($_SESSION['id
                             return false; // Prevent form submission
                         }
                         return true; // Form will be submitted if an option is selected
+                    }
+                    function destroyQuiz() {
+                        if (confirm("Are you sure you want to destroy the quiz, it will record previous answer?")) {
+                            window.location.href = "welcome.php?q=1"; // Redirect to welcome.php?q=1
+                        } else {
+                            return false; // Prevent form submission
+                        }
                     }
                 </script>
 
